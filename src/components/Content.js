@@ -1,8 +1,7 @@
-import React, { Component } from 'react'
+import React from 'react'
 import {Link } from 'react-router-dom';
 // import GetStarted from './GetStarted'
-export default class Content extends Component {
-  render() {
+const Content  = ()=>{
     return (
             <div>
                 <div  style={{marginTop:'100px',height: '100%',fontFamily:" Libre Baskervilleserif, Playwrite AU NSW, sans-serif",display:"flex",flexDirection:"column",alignItems:"center"}}>
@@ -12,5 +11,5 @@ export default class Content extends Component {
             </div>
             </div>
     )
-  }
 }
+export default  Content;

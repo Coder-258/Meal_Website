@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState,useEffect } from 'react';
 import DishCard from './DishCard';
 import { useParams } from 'react-router-dom';
 
@@ -7,33 +7,25 @@ export default function DishesWrapper() {
   return <Dishes category={category} />;
 }
 
-class Dishes extends Component {
-  constructor() {
-    super();
-    this.state = {
-      meals: [],
-    };
-  }
-
-  async componentDidMount() {
-    let url = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${this.props.category}`;
+const Dishes=(props)=> {
+  const [meals,setMeals]=useState([]);
+  const fetchData=async()=>{
+    let url = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${props.category}`;
     let data = await fetch(url);
     let parsedData = await data.json();
-    this.setState({ meals: parsedData.meals });
+    setMeals(parsedData.meals)
   }
-
-  render() {
-    const { meals } = this.state;
-    const cardsPerSlide = 3; // Maximum number of cards per slide
+  useEffect(()=>{
+    fetchData();
+  })
+    const cardsPerSlide = 3;
     const slides = [];
-
     for (let i = 0; i < meals.length; i += cardsPerSlide) {
       slides.push(meals.slice(i, i + cardsPerSlide));
     }
-
     return (
       <div style={{ marginTop: '20px' }}>
-        <h2 className="text-white" style={{ display: 'flex', fontWeight: 'bold', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', fontFamily: 'Pacifico, Playwrite, AU, NSW', }}>Want to eat {this.props.category} today?</h2>
+        <h2 className="text-white" style={{ display: 'flex', fontWeight: 'bold', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', fontFamily: 'Pacifico, Playwrite, AU, NSW', }}>Want to eat {props.category} today?</h2>
         <h2 className="text-white" style={{display: 'flex',fontWeight: '10px',flexDirection: 'column',justifyContent: 'center',alignItems: 'center',fontFamily: 'Pacifico, Playwrite, AU, NSW',}}>  Look for your today's cravings and enjoy your food!</h2>
         {meals && meals.length > 0 ? (
           <div id="carouselExample"className="carousel slide"data-bs-ride="carousel">
@@ -62,5 +54,4 @@ class Dishes extends Component {
         )}
       </div>
     );
-  }
 }

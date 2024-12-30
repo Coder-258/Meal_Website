@@ -7,7 +7,7 @@ import Navbar from './components/Navbar';
 import {Route,BrowserRouter as  Router,Routes} from 'react-router-dom'
 import ViewDishHandler from './components/ViewDish';
 import About from './components/About';
-function App() {
+const App=()=> {
   return (
   <div className='app-container ' >
     <Router>

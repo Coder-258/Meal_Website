@@ -1,25 +1,17 @@
-import React, { Component } from 'react';
+import React, { useEffect,useState } from 'react';
 import MealCard from './CategoryCard';
 
-export default class GetStarted extends Component {
-  constructor() {
-    super();
-    this.state = {
-      categories: [],
-      mealNames: [],
-      individualMeal: {},
-    };
-  }
-
-  async componentDidMount() {
+const GetStarted =()=> {
+  const [categories,setCategories]=useState([]);
+  const fetchData= async ()=>{
     let data = await fetch('https://www.themealdb.com/api/json/v1/1/categories.php');
     let parsedData = await data.json();
-    this.setState({ categories: parsedData.categories });
+    setCategories(parsedData.categories);
   }
-
-  render() {
-    const { categories } = this.state;
-    const cardsPerSlide = 3; // Maximum number of cards per slide
+  useEffect(()=>{
+    fetchData()
+  },[])
+    const cardsPerSlide = 3; 
     const slides = [];
 
     for (let i = 0; i < categories.length; i += cardsPerSlide) {
@@ -110,5 +102,5 @@ export default class GetStarted extends Component {
         )}
       </div>
     );
-  }
 }
+export default  GetStarted;

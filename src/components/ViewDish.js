@@ -1,25 +1,21 @@
-import React, { Component } from 'react'
+import React, { useState,useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 export default function ViewDishHandler(){
     const {dishName}=useParams();
     return <ViewDish name={dishName}/>
 }
-class ViewDish extends Component {
-    constructor(){
-        
-        super()
-        this.state={
-            dishRecipes:[],
-            ingredients:[]
-        }
-    }
-    async componentDidMount(){
-        let url=`https://www.themealdb.com/api/json/v1/1/search.php?s=${this.props.name}`
-        let data = await fetch(url);
-        let parsedData = await data.json();
-        this.setState({dishRecipes:parsedData.meals})
-    }
-    renderIngredients(element) {
+const ViewDish=(props) =>{
+  const [dishRecipes,setDishRecipes]=useState([]); 
+     const fetchData= async()=>{
+      let url=`https://www.themealdb.com/api/json/v1/1/search.php?s=${props.name}`
+      let data = await fetch(url);
+      let parsedData = await data.json();
+      setDishRecipes(parsedData.meals);
+     }
+     useEffect(()=>{
+      fetchData()
+     })
+    const renderIngredients=(element)=> {
         const ingredients = [];
         for (let i = 1; i <= 20; i++) {
           const ingredient = element[`strIngredient${i}`];
@@ -43,14 +39,13 @@ class ViewDish extends Component {
           </div>
         ) : null;
       }
-  render() {
     return (
       <div className='container text-white' style={{marginTop:'20px'}}>
-        {this.state.dishRecipes && this.state.dishRecipes.length>0?(  this.state.dishRecipes.map((element)=>{
+        {dishRecipes && dishRecipes.length>0?(  dishRecipes.map((element)=>{
                
             return <div className="accordion" id="accordionExample" style={{marginBottom:'20px'}}>
               <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-              <h2>{this.props.name}</h2>
+              <h2>{props.name}</h2>
               
               </div>
             
@@ -62,7 +57,7 @@ class ViewDish extends Component {
               </h2>
               <div id="collapseOne" className="accordion-collapse collapse show" data-bs-parent="#accordionExample">
                 <div className="accordion-body">
-                <p>{this.renderIngredients(element)}</p>
+                <p>{renderIngredients(element)}</p>
                 </div>
               </div>
             </div>
@@ -83,5 +78,5 @@ class ViewDish extends Component {
           })  ):<p>No Recipe found</p>}    
       </div>
     )
-  }
+  
 }
